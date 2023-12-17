@@ -2,7 +2,9 @@ package ru.netology.javaqa.card;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selectors;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
@@ -10,8 +12,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static com.codeborne.selenide.Condition.exist;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.SetValueOptions.withText;
@@ -25,7 +26,6 @@ class PozitivTest {
     void ifTheRegistrationDataIsCorrect() {
 
         open("http://localhost:9999");
-        //$(".menu-item__control").setValue("Москва");
         $("[data-test-id='city'] input").setValue("Москва");
         String planingDate = generateDate(3, "dd.MM.yyyy");
         $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
@@ -34,11 +34,9 @@ class PozitivTest {
         $("[data-test-id='phone'] input").setValue("+79100341186");
         $("[data-test-id='agreement']").click();
         $("button.button").click();
-        //$("[data-test-id='notification'] notification").setValue("Успешно!");
-        $(byText("Успешно!")).shouldBe(exist, Duration.ofSeconds(5));
-
-
-
+        $(Selectors.withText("Успешно!")).shouldBe(exist, Duration.ofSeconds(15));
+        $(" .notification__content").shouldHave(Condition.exactText("Встреча успешно забронирована на " + planingDate),
+                Duration.ofSeconds(10));
     }
 
 
